@@ -2,11 +2,10 @@ package com.krikorherlopian.tictactoe_minimax;
 
 public class PointsAndScores {
 
-    int score;
     Point point;
-
-    PointsAndScores(int score, Point point) {
-        this.score = score;
+    int score;
+    PointsAndScores(int score,Point point) {
         this.point = point;
+        this.score = score;
     }
 }

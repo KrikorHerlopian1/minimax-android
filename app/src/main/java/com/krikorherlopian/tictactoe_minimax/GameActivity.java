@@ -1,40 +1,36 @@
 package com.krikorherlopian.tictactoe_minimax;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import java.util.List;
-
 public class GameActivity extends AppCompatActivity {
 
-
-    private int grid_size;
+    char [][] myBoard;
+    Board board = new Board();
+    private int sizeGrid;
+    TextView textViewTurn;
     TableLayout gameBoard;
-    TextView txt_turn;
-    char [][] my_board;
-    Board b = new Board();
     char turn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
 
-        grid_size = Integer.parseInt(getString(R.string.size_of_board));
-        my_board = new char [grid_size][grid_size];
         gameBoard = (TableLayout) findViewById(R.id.mainBoard);
-        txt_turn = (TextView) findViewById(R.id.turn);
+        textViewTurn = (TextView) findViewById(R.id.turn);
+
+        sizeGrid = Integer.parseInt(getString(R.string.size_of_board));
+        myBoard = new char [sizeGrid][sizeGrid];
+
 
         resetBoard();
-        txt_turn.setText("Turn: "+turn);
+        textViewTurn.setText("Turn: "+turn);
 
         for(int i = 0; i< gameBoard.getChildCount(); i++){
             TableRow row = (TableRow) gameBoard.getChildAt(i);
@@ -58,40 +54,33 @@ public class GameActivity extends AppCompatActivity {
 
     protected void resetBoard(){
         turn = 'X';
-        for(int i = 0; i< grid_size; i++){
-            for(int j = 0; j< grid_size; j++){
-                my_board[i][j] = ' ';
+        for(int row = 0; row< sizeGrid; row++){
+            for(int col = 0; col < sizeGrid; col++){
+                myBoard[row][col] = ' ';
             }
         }
     }
 
     protected int gameStatus(){
-
-        //0 Continue
-        //1 X Wins
-        //2 O Wins
-        //-1 Draw
-
-        int rowX = 0, colX = 0, rowO = 0, colO = 0;
-        for(int i = 0; i< grid_size; i++){
-            if(check_Row_Equality(i,'X'))
+        for(int i = 0; i< sizeGrid; i++){
+            if(checkRowEquality(i,'X'))
                 return 1;
-            if(check_Column_Equality(i, 'X'))
+            if(checkColumnEquality(i, 'X'))
                 return 1;
-            if(check_Row_Equality(i,'O'))
+            if(checkRowEquality(i,'O'))
                 return 2;
-            if(check_Column_Equality(i,'O'))
+            if(checkColumnEquality(i,'O'))
                 return 2;
-            if(check_Diagonal('X'))
+            if(checkDiagonal('X'))
                 return 1;
-            if(check_Diagonal('O'))
+            if(checkDiagonal('O'))
                 return 2;
         }
 
         boolean boardFull = true;
-        for(int i = 0; i< grid_size; i++){
-            for(int j = 0; j< grid_size; j++){
-                if(my_board[i][j]==' ')
+        for(int i = 0; i< sizeGrid; i++){
+            for(int j = 0; j< sizeGrid; j++){
+                if(myBoard[i][j]==' ')
                     boardFull = false;
             }
         }
@@ -100,50 +89,114 @@ public class GameActivity extends AppCompatActivity {
         else return 0;
     }
 
-    protected boolean check_Diagonal(char player){
-        int count_Equal1 = 0,count_Equal2 = 0;
-        for(int i = 0; i< grid_size; i++)
-            if(my_board[i][i]==player)
-                count_Equal1++;
-        for(int i = 0; i< grid_size; i++)
-            if(my_board[i][grid_size -1-i]==player)
-                count_Equal2++;
-        if(count_Equal1== grid_size || count_Equal2== grid_size)
+    protected boolean checkDiagonal(char player){
+        int count1 = 0,count2 = 0;
+        for(int i = 0; i< sizeGrid; i++)
+            if(myBoard[i][i]==player)
+                count1++;
+        for(int i = 0; i< sizeGrid; i++)
+            if(myBoard[i][sizeGrid -1-i]==player)
+                count2++;
+        if(count1 == sizeGrid || count2== sizeGrid)
             return true;
         else return false;
     }
 
-    protected boolean check_Row_Equality(int r, char player){
-        int count_Equal=0;
-        for(int i = 0; i< grid_size; i++){
-            if(my_board[r][i]==player)
-                count_Equal++;
-        }
 
-        if(count_Equal== grid_size)
-            return true;
-        else
+
+    protected boolean cellSet(int row, int column){
+        if(myBoard[row][column]==' ')
             return false;
-    }
-
-    protected boolean check_Column_Equality(int c, char player){
-        int count_Equal=0;
-        for(int i = 0; i< grid_size; i++){
-            if(my_board[i][c]==player)
-                count_Equal++;
-        }
-
-        if(count_Equal== grid_size)
-            return true;
         else
-            return false;
+            return true;
     }
 
-    protected boolean Cell_Set(int r, int c){
-        return !(my_board[r][c]==' ');
+
+    View.OnClickListener Move(final int row, final int column, final TextView textView){
+
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                playUser(row,column,textView);
+            }
+        };
     }
 
-    protected void stopMatch(){
+    public void playUser(int row, int column,final TextView tv){
+        try{
+            if(cellSet(row,column) == false) {
+                myBoard[row][column] = turn;
+
+                if (turn == 'O') {
+                    setText(getResources().getString(R.string.O) ,'X',tv,false);
+                }
+                else if (turn == 'X') {
+                    setText(getResources().getString(R.string.X) ,'O',tv,false);
+                }
+                if(gameStatus() == -1){
+                    setText("This game ends in a draw" ,turn,textViewTurn,true);
+                }
+                else if (gameStatus() == 0) {
+                    setText("Player X turn" ,turn,textViewTurn,false);
+                }
+                else{
+                    setText(turn+" Loses!Sorry!" ,turn,textViewTurn,true);
+                }
+                playComputer(row, column);
+            }
+            else{
+                textViewTurn.setText(textViewTurn.getText()+" Choose an Empty Call");
+            }
+        }
+        catch (Exception e){}
+    }
+
+    public void playComputer(int row, int column){
+        try{
+            Point userMove = new Point(row, column);
+            board.placeAMove(userMove, 2);
+            board.callMinimaxFunction(0, 1);
+            for (PointsAndScores pas : board.scores) {
+                System.out.println("Point: " + pas.point + " Score: " + pas.score);
+            }
+            board.placeAMove(board.perfectMove(), 1);
+            if(cellSet(board.perfectMove().x,board.perfectMove().y) == false) {
+
+                myBoard[board.perfectMove().x][board.perfectMove().y] = turn;
+                TableLayout tblLayout = (TableLayout)findViewById(R.id.mainBoard);
+
+                TableRow r = (TableRow)tblLayout.getChildAt(board.perfectMove().x);
+                TextView tv= (TextView) r.getChildAt(board.perfectMove().y);
+
+
+                if (turn == 'O') {
+                    setText(getResources().getString(R.string.O) ,'X',tv,false);
+                }
+                else if (turn == 'X') {
+                    setText(getResources().getString(R.string.X) ,'O',tv,false);
+                }
+                if(gameStatus() == -1){
+                    setText("This game ends in a draw" ,turn,textViewTurn,true);
+                }
+                else if (gameStatus() == 0) {
+                    setText("Player X turn" ,turn,textViewTurn,false);
+                }
+                else{
+                    setText(turn+" Loses!Sorry!" ,turn,textViewTurn,true);
+                }
+            }
+
+        }
+        catch (Exception e){}
+    }
+
+    public void setText(String text, Character ox, TextView tv, boolean endMatch ){
+        tv.setText(text);
+        turn = ox;
+        if(endMatch)
+            endMatch();
+    }
+    protected void endMatch(){
         for(int i = 0; i< gameBoard.getChildCount(); i++){
             TableRow row = (TableRow) gameBoard.getChildAt(i);
             for(int j = 0; j<row.getChildCount(); j++){
@@ -153,81 +206,31 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    View.OnClickListener Move(final int r, final int c, final TextView tv){
+    protected boolean checkColumnEquality(int c, char player){
+        int count=0;
+        for(int row = 0; row< sizeGrid; row++){
+            if(myBoard[row][c]==player)
+                count = count + 1;
+        }
 
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(!Cell_Set(r,c)) {
-                    my_board[r][c] = turn;
-                    if (turn == 'X') {
-                        tv.setText(R.string.X);
-                        turn = 'O';
-                    } else if (turn == 'O') {
-                        tv.setText(R.string.O);
-                        turn = 'X';
-                    }
-                    if (gameStatus() == 0) {
-                        txt_turn.setText("Turn: Player " + turn);
-                    }
-                    else if(gameStatus() == -1){
-                        txt_turn.setText("This is a Draw match");
-                        stopMatch();
-                    }
-                    else{
-                        txt_turn.setText(turn+" Loses!");
-                        stopMatch();
-                    }
-                    playComputer(r, c);
-                }
-                else{
-                    txt_turn.setText(txt_turn.getText()+" Choose an Empty Call");
-                }
-
-            }
-        };
+        if(sizeGrid != count)
+            return false;
+        else
+            return true;
     }
-
-    public void playComputer(int r, int c){
-        try{
-            Point userMove = new Point(r, c);
-
-            b.placeAMove(userMove, 2);
-            b.callMinimax(0, 1);
-            for (PointsAndScores pas : b.rootsChildrenScores) {
-                System.out.println("Point: " + pas.point + " Score: " + pas.score);
-            }
-            b.placeAMove(b.returnBestMove(), 1);
-            System.out.println("b.returnBestMove() = "+b.returnBestMove());
-            // b.displayBoard();
-            if(!Cell_Set(b.returnBestMove().x,b.returnBestMove().y)) {
-
-                my_board[b.returnBestMove().x][b.returnBestMove().y] = turn;
-                TableLayout tblLayout = (TableLayout)findViewById(R.id.mainBoard);
-
-                TableRow row = (TableRow)tblLayout.getChildAt(b.returnBestMove().x);
-                TextView tv= (TextView) row.getChildAt(b.returnBestMove().y);
-                if (turn == 'X') {
-                    tv.setText(R.string.X);
-                    turn = 'O';
-                } else if (turn == 'O') {
-                    tv.setText(R.string.O);
-                    turn = 'X';
-                }
-                if (gameStatus() == 0) {
-                    txt_turn.setText("Turn: Player " + turn);
-                }
-                else if(gameStatus() == -1){
-                    txt_turn.setText("This is a Draw match");
-                    stopMatch();
-                }
-                else{
-                    txt_turn.setText(turn+" Loses!");
-                    stopMatch();
-                }
+    protected boolean checkRowEquality(int row, char player){
+        int count = 0;
+        for(int col = 0; col < sizeGrid; col++){
+            if(myBoard[row][col]==player){
+                count = count + 1;
             }
         }
-        catch (Exception e){}
+
+        if(count != sizeGrid)
+            return false;
+        else
+            return true;
     }
+
+
 }

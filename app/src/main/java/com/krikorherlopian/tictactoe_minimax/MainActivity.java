@@ -29,10 +29,6 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // update the ui from here
-                //Intent i = new Intent(getApplicationContext(), GameActivity.class);
-                //startActivity(i);
-                //finish();
                 ImageView im = (ImageView)findViewById(R.id.src);
                 switch (count){
                     case 0:
