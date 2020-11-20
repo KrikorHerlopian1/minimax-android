@@ -13,7 +13,7 @@ public class GameActivity extends AppCompatActivity {
 
     char [][] myBoard;
     TicTacToeBoard ticTacToeBoard = new TicTacToeBoard();
-    private int sizeGrid;
+    int sizeGrid;
     TextView textViewTurn;
     TableLayout gameBoard;
     char turn;
