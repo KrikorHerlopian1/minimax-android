@@ -9,6 +9,7 @@ public class TicTacToeBoard {
     List<Point> pointsAvailable;
     int[][] ticTacToeBoard = new int[3][3];
     List<ScoresAndPoints> scores;
+    int rowColSize = 3;
 
     public void placeAMove(Point point, int player) {
         ticTacToeBoard[point.x][point.y] = player;
@@ -17,8 +18,8 @@ public class TicTacToeBoard {
 
     public List<Point> getStates() {
         pointsAvailable = new ArrayList<>();
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 3; ++col) {
+        for (int row = 0; row < rowColSize; ++row) {
+            for (int col = 0; col < rowColSize; ++col) {
                 if (ticTacToeBoard[row][col] == 0) {
                     pointsAvailable.add(new Point(row, col));
                 }
@@ -73,7 +74,7 @@ public class TicTacToeBoard {
         else if(ticTacToeBoard[0][0] == ticTacToeBoard[1][1] && ticTacToeBoard[0][0] == ticTacToeBoard[2][2] && ticTacToeBoard[0][0] == 1)
             return +1;
 
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < rowColSize; ++i) {
             if (((ticTacToeBoard[i][0] == ticTacToeBoard[i][1] && ticTacToeBoard[i][0] == ticTacToeBoard[i][2] && ticTacToeBoard[i][0] == 1)
                     || (ticTacToeBoard[0][i] == ticTacToeBoard[1][i] && ticTacToeBoard[0][i] == ticTacToeBoard[2][i] && ticTacToeBoard[0][i] == 1))) {
                 return +1;
