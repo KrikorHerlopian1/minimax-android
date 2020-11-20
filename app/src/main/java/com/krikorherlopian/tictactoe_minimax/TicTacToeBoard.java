@@ -1,17 +1,14 @@
 package com.krikorherlopian.tictactoe_minimax;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
-/**
- * Represents the Tic Tac Toe board.
- */
-public class Board {
+
+public class TicTacToeBoard {
 
     List<Point> pointsAvailable;
     int[][] board = new int[3][3];
-    List<PointsAndScores> scores;
+    List<ScoresAndPoints> scores;
 
     public void placeAMove(Point point, int player) {
         board[point.x][point.y] = player;
@@ -75,6 +72,7 @@ public class Board {
         }
         else if(board[0][0] == board[1][1] && board[0][0] == board[2][2] && board[0][0] == 1)
             return +1;
+
         for (int i = 0; i < 3; ++i) {
             if (((board[i][0] == board[i][1] && board[i][0] == board[i][2] && board[i][0] == 1)
                     || (board[0][i] == board[1][i] && board[0][i] == board[2][i] && board[0][i] == 1))) {
@@ -102,7 +100,7 @@ public class Board {
                 scoreList.add(currentScore);
 
                 if (depth == 0)
-                    scores.add(new PointsAndScores(currentScore, point));
+                    scores.add(new ScoresAndPoints(currentScore, point));
 
             }
             board[point.x][point.y] = 0;

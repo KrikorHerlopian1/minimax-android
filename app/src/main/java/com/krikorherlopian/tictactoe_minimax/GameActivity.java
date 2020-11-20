@@ -12,7 +12,7 @@ import android.widget.TextView;
 public class GameActivity extends AppCompatActivity {
 
     char [][] myBoard;
-    Board board = new Board();
+    TicTacToeBoard ticTacToeBoard = new TicTacToeBoard();
     private int sizeGrid;
     TextView textViewTurn;
     TableLayout gameBoard;
@@ -154,19 +154,19 @@ public class GameActivity extends AppCompatActivity {
     public void playComputer(int row, int column){
         try{
             Point userMove = new Point(row, column);
-            board.placeAMove(userMove, 2);
-            board.callMinimaxFunction(0, 1);
-            for (PointsAndScores pas : board.scores) {
+            ticTacToeBoard.placeAMove(userMove, 2);
+            ticTacToeBoard.callMinimaxFunction(0, 1);
+            for (ScoresAndPoints pas : ticTacToeBoard.scores) {
                 System.out.println("Point: " + pas.point + " Score: " + pas.score);
             }
-            board.placeAMove(board.perfectMove(), 1);
-            if(cellSet(board.perfectMove().x,board.perfectMove().y) == false) {
+            ticTacToeBoard.placeAMove(ticTacToeBoard.perfectMove(), 1);
+            if(cellSet(ticTacToeBoard.perfectMove().x, ticTacToeBoard.perfectMove().y) == false) {
 
-                myBoard[board.perfectMove().x][board.perfectMove().y] = turn;
+                myBoard[ticTacToeBoard.perfectMove().x][ticTacToeBoard.perfectMove().y] = turn;
                 TableLayout tblLayout = (TableLayout)findViewById(R.id.mainBoard);
 
-                TableRow r = (TableRow)tblLayout.getChildAt(board.perfectMove().x);
-                TextView tv= (TextView) r.getChildAt(board.perfectMove().y);
+                TableRow r = (TableRow)tblLayout.getChildAt(ticTacToeBoard.perfectMove().x);
+                TextView tv= (TextView) r.getChildAt(ticTacToeBoard.perfectMove().y);
 
 
                 if (turn == 'O') {
