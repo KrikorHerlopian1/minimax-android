@@ -7,11 +7,11 @@ import java.util.List;
 public class TicTacToeBoard {
 
     List<Point> pointsAvailable;
-    int[][] board = new int[3][3];
+    int[][] ticTacToeBoard = new int[3][3];
     List<ScoresAndPoints> scores;
 
     public void placeAMove(Point point, int player) {
-        board[point.x][point.y] = player;
+        ticTacToeBoard[point.x][point.y] = player;
     }
 
 
@@ -19,7 +19,7 @@ public class TicTacToeBoard {
         pointsAvailable = new ArrayList<>();
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 3; ++col) {
-                if (board[row][col] == 0) {
+                if (ticTacToeBoard[row][col] == 0) {
                     pointsAvailable.add(new Point(row, col));
                 }
             }
@@ -62,24 +62,24 @@ public class TicTacToeBoard {
     public int minimax(int depth, int turn) {
         List<Point> pointsAvailable = getStates();
         List<Integer> scoreList = new ArrayList<>();
-        if(board[0][2] == board[1][1] && board[0][2] == board[2][0] && board[0][2] == 2)
+        if(ticTacToeBoard[0][2] == ticTacToeBoard[1][1] && ticTacToeBoard[0][2] == ticTacToeBoard[2][0] && ticTacToeBoard[0][2] == 2)
             return -1;
-        else if (board[0][0] == board[1][1] && board[0][0] == board[2][2] && board[0][0] == 2) {
+        else if (ticTacToeBoard[0][0] == ticTacToeBoard[1][1] && ticTacToeBoard[0][0] == ticTacToeBoard[2][2] && ticTacToeBoard[0][0] == 2) {
             return -1;
         }
-        else if (board[0][2] == board[1][1] && board[0][2] == board[2][0] && board[0][2] == 1) {
+        else if (ticTacToeBoard[0][2] == ticTacToeBoard[1][1] && ticTacToeBoard[0][2] == ticTacToeBoard[2][0] && ticTacToeBoard[0][2] == 1) {
             return +1;
         }
-        else if(board[0][0] == board[1][1] && board[0][0] == board[2][2] && board[0][0] == 1)
+        else if(ticTacToeBoard[0][0] == ticTacToeBoard[1][1] && ticTacToeBoard[0][0] == ticTacToeBoard[2][2] && ticTacToeBoard[0][0] == 1)
             return +1;
 
         for (int i = 0; i < 3; ++i) {
-            if (((board[i][0] == board[i][1] && board[i][0] == board[i][2] && board[i][0] == 1)
-                    || (board[0][i] == board[1][i] && board[0][i] == board[2][i] && board[0][i] == 1))) {
+            if (((ticTacToeBoard[i][0] == ticTacToeBoard[i][1] && ticTacToeBoard[i][0] == ticTacToeBoard[i][2] && ticTacToeBoard[i][0] == 1)
+                    || (ticTacToeBoard[0][i] == ticTacToeBoard[1][i] && ticTacToeBoard[0][i] == ticTacToeBoard[2][i] && ticTacToeBoard[0][i] == 1))) {
                 return +1;
             }
-            if ((board[i][0] == board[i][1] && board[i][0] == board[i][2] && board[i][0] == 2)
-                    || (board[0][i] == board[1][i] && board[0][i] == board[2][i] && board[0][i] == 2)) {
+            if ((ticTacToeBoard[i][0] == ticTacToeBoard[i][1] && ticTacToeBoard[i][0] == ticTacToeBoard[i][2] && ticTacToeBoard[i][0] == 2)
+                    || (ticTacToeBoard[0][i] == ticTacToeBoard[1][i] && ticTacToeBoard[0][i] == ticTacToeBoard[2][i] && ticTacToeBoard[0][i] == 2)) {
                 return -1;
             }
         }
@@ -103,7 +103,7 @@ public class TicTacToeBoard {
                     scores.add(new ScoresAndPoints(currentScore, point));
 
             }
-            board[point.x][point.y] = 0;
+            ticTacToeBoard[point.x][point.y] = 0;
         }
         if(turn == 1)
             return returnMaximum(scoreList);
